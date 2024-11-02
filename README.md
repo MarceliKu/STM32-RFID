@@ -146,7 +146,8 @@ The program recognizes the type of RFID tag and allows copying id only to the sa
 To start the replication process again, simply press the blue button on the Nucleo board at any time.
 
 ## RFID_7941W_Console
-The Console project is a bit more complicated. The console (terminal) here will be the RealTerm program running on the computer to which our Nucleo board is connected by USB cable.  
+The Console project is a bit more complicated. The console (terminal) here will be the RealTerm program running on the computer to which our Nucleo board is connected by USB cable. The necessary configuration of RealTerm's connection parameters is the same as for the Replicator project. 
+
 The task of the project is to allow you to try out the various possibilities offered by the 7941W module.
 For this purpose, the RealTerm console window displays a menu with a list of options to choose from. The user can select any of the options by sending a single character from the console. This can be done on the “Send” tab of the RealTerm program. 
 
