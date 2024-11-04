@@ -153,18 +153,36 @@ For this purpose, the RealTerm console window displays a menu with a list of opt
 
 ![Console_send](https://github.com/user-attachments/assets/82b822d3-f417-4bcc-af59-6e9be7bccfd4)
 
+Please note that if you select a menu option from the console, you should send one character - one byte of character type. However, in some cases the program expects bytes given a hexadecimal value such as 0A. On the “Send” tab of RealTerm, you can easily distinguish whether you are sending a character or a hexadecimal number.
 
+**Some explanations about the various options of the program:**
+
+Option 1 - Periodically read Tag ID (125 kHz)
+
+In this mode, the 7941W module will try to read the id of a tag put close to its coil over and over again, every 700 ms. It will do this until the 'm' character comes from the console, which will cause the menu to be displayed again.
+
+Option 2 works similarly, with the difference that the 7941W module will read tags operating at 13.56 MHz.
+
+In both options, when no tag is read, no information will appear on the console. However, when some id number is read it will be displayed as a string of several hexadecimal numbers separated by a colon. An example of this operation is shown in the following screenshot from the terminal: 
 
 ![Console_option1](https://github.com/user-attachments/assets/c8fc3273-c9ad-4bcf-92d8-f2c25992201b)
 
-
+In both options, there is another example functionality. If the read tag id is identical to the value of the UniPass (universal password) variable defined in the program, the green LED (LD2) on the Nucleo board will switch its state (on or off). 
+The current value of the UniPass variable is visible when the menu is displayed on the console, but the user can change it with option 3.
  
 ![Console_option3](https://github.com/user-attachments/assets/c65d426a-f6b0-4ba0-9115-f32d54b14e26)
 
+You may have already noticed that UniPass consists of 6 bytes. However, the id of a 125 kHz tag is 5 bytes and a 13.56 MHz tag is only 4 bytes (at least according to the 7941W module). Therefore, in options 1 and 2, the read id is compared only with the first 5 or 4 bytes of UniPass.
 
+Option 4 and 5 - Write new Tag ID
+
+These options save the new id in the tag. The first 5 bytes (for 125 kHz tags) or 4 bytes (for 13.56 MHz tags) of the UniPass variable are used as the new id, respectively. 
 
 ![Console_option4](https://github.com/user-attachments/assets/d31bb0bb-4842-457e-b359-6069facd185d)
 
+All other options of the program are intended only for 13.56 MHz tags, because only such tags also provide additional memory space. This is usually 1kB of memory, which can be read, written and password protected. Options 6 - 9 are for experimenting with these possibilities. (Option 'a' according to me does not work as expected, but you can verify it yourself).
+
+Option 6 - Read specified sector (13.56 MHz)
 
 
 ![Console_option6](https://github.com/user-attachments/assets/90ca0be6-b4a1-4817-928a-e6f5bc3063f8)
