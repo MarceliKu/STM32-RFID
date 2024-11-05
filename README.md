@@ -180,14 +180,20 @@ These options save the new id in the tag. The first 5 bytes (for 125 kHz tags) o
 
 ![Console_option4](https://github.com/user-attachments/assets/d31bb0bb-4842-457e-b359-6069facd185d)
 
-All other options of the program are intended only for 13.56 MHz tags, because only such tags also provide additional memory space. This is usually 1kB of memory, which can be read, written and password protected. Options 6 - 9 are for experimenting with these possibilities. (Option 'a' according to me does not work as expected, but you can verify it yourself).
+All other options of the program are intended only for 13.56 MHz tags, because only such tags also provide additional memory space. This is usually 1kB of memory, which can be read, written and password protected. Options 6 - 9 are for experimenting with these possibilities. (Option 'a' that is command 0x17 according to me does not work as expected, but you can verify it yourself).
 
 Option 6 - Read specified sector (13.56 MHz)
 
+This option allows reading one of the memory sectors of the RFID tag. It is worth to know that the entire available memory of RFID tags operating at 13.56 MHz, is divided into groups, blocks and sectors. After selecting option 6 from the menu, the program will ask on the console for the selected sector, block and group. 
+Note that this data is given in hexadecimal format!
+The data in each sector is protected by a 6-byte password. By default, this password is a string: FF FF FF FF FF FF however, the password can be changed. (This program allows you to do so using option 8.)
+Reading data from the selected memory sector, the program needs to know what password to use, so in option 6 the last question is about password. In response, we indicate either 01 - as DefPass (default password: FF FF FF FF FF FF) or 02 - as the current value of the UniPass variable, which you can define yourself in advance.       
+This is how it may look like on the console: 
 
 ![Console_option6](https://github.com/user-attachments/assets/90ca0be6-b4a1-4817-928a-e6f5bc3063f8)
 
-
+I hope that the other options do not require a separate description and it is easy to guess what the program is asking for and what it displays in the result.
+Below I'm still just a fragment of the console screen displayed after using option 9 - in which the entire 1 KB size memory is read by successively sending block read commands. 
 
 ![Console_option9](https://github.com/user-attachments/assets/62041207-012a-40d7-9f63-49f79f7ccc54)
 
