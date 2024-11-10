@@ -80,7 +80,7 @@ uint8_t BlockContent[] = {0x00, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80, 
 // only the first 5 bytes will be used as the ID
 // only the first 4 bytes will be used as the UID
 // all 6 bytes will be used as a new/user password
-uint8_t UniPass[] = {0X01, 0X02, 0X03, 0X04, 0X05, 0X06}; // default ID/UID (in case of UID last byte is ignored)
+uint8_t UniPass[] = {0X01, 0X02, 0X03, 0X04, 0X05, 0X06}; // default universal password/ID/UID
 uint8_t InputByteNo = 0; // Number of byte entered by the user on console
 uint8_t ExpectedByteNo = 0; // Expected byte number
 
@@ -579,7 +579,7 @@ int main(void)
     				 {
     					 RequestPtr[7]  = DefPass[0];
     					 RequestPtr[8]  = DefPass[1];
-    					 RequestPtr[9] = DefPass[2];
+    					 RequestPtr[9]  = DefPass[2];
     					 RequestPtr[10] = DefPass[3];
     					 RequestPtr[11] = DefPass[4];
     					 RequestPtr[12] = DefPass[5];
@@ -588,7 +588,7 @@ int main(void)
     				 {
     					 RequestPtr[7]  = UniPass[0];
     					 RequestPtr[8]  = UniPass[1];
-    					 RequestPtr[9] = UniPass[2];
+    					 RequestPtr[9]  = UniPass[2];
     					 RequestPtr[10] = UniPass[3];
     					 RequestPtr[11] = UniPass[4];
     					 RequestPtr[12] = UniPass[5];
@@ -596,8 +596,8 @@ int main(void)
     				 // insert new password:
     				 if(UserAnswers[3] == 0x01) // DefPass was chosen
     				 {
-    					 RequestPtr[13]  = DefPass[0];
-    					 RequestPtr[14]  = DefPass[1];
+    					 RequestPtr[13] = DefPass[0];
+    					 RequestPtr[14] = DefPass[1];
     					 RequestPtr[15] = DefPass[2];
     					 RequestPtr[16] = DefPass[3];
     					 RequestPtr[17] = DefPass[4];
@@ -605,8 +605,8 @@ int main(void)
     				 }
     				 else // UniPass was chosen
     				 {
-    					 RequestPtr[13]  = UniPass[0];
-    					 RequestPtr[14]  = UniPass[1];
+    					 RequestPtr[13] = UniPass[0];
+    					 RequestPtr[14] = UniPass[1];
     					 RequestPtr[15] = UniPass[2];
     					 RequestPtr[16] = UniPass[3];
     					 RequestPtr[17] = UniPass[4];
@@ -647,12 +647,33 @@ int main(void)
     			 {
     				 RequestPtr = MsgReadSector;
     				 RequestLen = sizeof MsgReadSector;
-    				 RequestPtr[5] = Sector;
-    				 RequestPtr[6] = Block;
-    				 RequestPtr[7] = 0x0B; // A or B group password (0x0A/0x0B)
 
-    				 XorByte = CalculateCheckByte(RequestPtr, RequestLen);
-    				 RequestPtr[RequestLen - 1] = XorByte;
+           	   	     RequestPtr[5] = Sector;
+            		 RequestPtr[6] = Block;
+            		 RequestPtr[7] = UserAnswers[0]; // A or B group password (0x0A/0x0B)
+            		 // insert password:
+					 if(UserAnswers[1] == 0x01) // DefPass was chosen
+					 {
+						 RequestPtr[8]  = DefPass[0];
+						 RequestPtr[9]  = DefPass[1];
+						 RequestPtr[10] = DefPass[2];
+						 RequestPtr[11] = DefPass[3];
+						 RequestPtr[12] = DefPass[4];
+						 RequestPtr[13] = DefPass[5];
+					 }
+					 else // UniPass was chosen
+					 {
+						 RequestPtr[8]  = UniPass[0];
+						 RequestPtr[9]  = UniPass[1];
+						 RequestPtr[10] = UniPass[2];
+						 RequestPtr[11] = UniPass[3];
+						 RequestPtr[12] = UniPass[4];
+						 RequestPtr[13] = UniPass[5];
+					 }
+
+					 XorByte = CalculateCheckByte(RequestPtr, RequestLen);
+					 RequestPtr[RequestLen - 1] = XorByte;
+
 
     				 HAL_UART_Transmit(&huart1, RequestPtr, RequestLen, 500);
 
@@ -690,6 +711,32 @@ int main(void)
         		 {
         			 RequestPtr = MsgReadAll;
         			 RequestLen = sizeof MsgReadAll;
+
+            		 RequestPtr[5] = UserAnswers[0]; // A or B group password (0x0A/0x0B)
+            		 // insert password:
+					 if(UserAnswers[1] == 0x01) // DefPass was chosen
+					 {
+						 RequestPtr[6]  = DefPass[0];
+						 RequestPtr[7]  = DefPass[1];
+						 RequestPtr[8]  = DefPass[2];
+						 RequestPtr[9]  = DefPass[3];
+						 RequestPtr[10] = DefPass[4];
+						 RequestPtr[11] = DefPass[5];
+					 }
+					 else // UniPass was chosen
+					 {
+						 RequestPtr[6]  = UniPass[0];
+						 RequestPtr[7]  = UniPass[1];
+						 RequestPtr[8]  = UniPass[2];
+						 RequestPtr[9]  = UniPass[3];
+						 RequestPtr[10] = UniPass[4];
+						 RequestPtr[11] = UniPass[5];
+					 }
+
+					 XorByte = CalculateCheckByte(RequestPtr, RequestLen);
+					 RequestPtr[RequestLen - 1] = XorByte;
+
+
         	    	 RequetsSent++;
         	    	 HAL_UART_Transmit(&huart1, RequestPtr, RequestLen, 500);
         		 }
